@@ -1,5 +1,6 @@
 package com.example.sortingvisualizer.domain.algorithm
 
 enum class Algorithm {
-    BUBBLE_SORT
+    BUBBLE_SORT,
+    QUICK_SORT
 }

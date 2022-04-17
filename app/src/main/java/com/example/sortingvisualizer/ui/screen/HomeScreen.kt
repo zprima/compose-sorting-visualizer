@@ -3,8 +3,13 @@ package com.example.sortingvisualizer.ui.screen
 import android.graphics.Paint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Button
+import androidx.compose.material.ScrollableTabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -19,6 +24,7 @@ import com.example.sortingvisualizer.domain.algorithm.Algorithm
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = viewModel()){
     val uiState = viewModel.uiState
+    val scrollState = rememberScrollState()
 
     Column(){
         Button(
@@ -27,10 +33,14 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()){
             Text("Reshuffle")
         }
 
-        Button(
-            onClick = { viewModel.sort(Algorithm.BUBBLE_SORT) }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(scrollState),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text("Bubble Sort")
+            Button(onClick = { viewModel.sort(Algorithm.BUBBLE_SORT) }) {  Text("Bubble Sort") }
+            Button(onClick = { viewModel.sort(Algorithm.QUICK_SORT) }) {  Text("Quick Sort") }
         }
 
         Text("Sort is ${if(uiState.sortRunning) "Running" else "Not Running"}")

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sortingvisualizer.domain.algorithm.Algorithm
 import com.example.sortingvisualizer.domain.algorithm.bubbleSort
+import com.example.sortingvisualizer.domain.algorithm.quickSort
 import com.example.sortingvisualizer.domain.algorithm.randomize
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -33,6 +34,20 @@ class HomeViewModel: ViewModel() {
                     uiState = uiState.copy(sortRunning = true)
 
                     bubbleSort(uiState.numbers).collectLatest { newList ->
+                        uiState = uiState.copy(numbers = listOf())
+                        uiState = uiState.copy(numbers = newList)
+                    }
+
+                    uiState = uiState.copy(sortRunning = false)
+                }
+            }
+            Algorithm.QUICK_SORT -> {
+                viewModelScope.launch {
+                    uiState = uiState.copy(sortRunning = true)
+
+                    quickSort(
+                        list = uiState.numbers.toMutableList()
+                    ).collectLatest { newList ->
                         uiState = uiState.copy(numbers = listOf())
                         uiState = uiState.copy(numbers = newList)
                     }
