@@ -27,10 +27,15 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()){
     val scrollState = rememberScrollState()
 
     Column(){
-        Button(
-            onClick = { viewModel.reshuffle() }
+        Row(modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text("Reshuffle")
+            Button(onClick = { viewModel.reshuffle() }) { Text("Reshuffle") }
+
+            if(uiState.sortRunning) {
+                Button(onClick = { viewModel.stopSort() }) { Text("Stop Sort") }
+            }
         }
 
         Row(
@@ -41,9 +46,8 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()){
         ) {
             Button(onClick = { viewModel.sort(Algorithm.BUBBLE_SORT) }) {  Text("Bubble Sort") }
             Button(onClick = { viewModel.sort(Algorithm.QUICK_SORT) }) {  Text("Quick Sort") }
+            Button(onClick = { viewModel.sort(Algorithm.MERGE_SORT) }) {  Text("Merge Sort") }
         }
-
-        Text("Sort is ${if(uiState.sortRunning) "Running" else "Not Running"}")
 
         Spacer(Modifier.height(16.dp))
 
@@ -53,8 +57,6 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()){
 
 @Composable
 fun NumberVisualizer(numbers: List<Int>) {
-    val density = LocalDensity.current.density
-
     Canvas(
         modifier = Modifier
             .padding(16.dp)

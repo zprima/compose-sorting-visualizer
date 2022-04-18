@@ -4,7 +4,6 @@ import android.util.Log
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 
 suspend fun quickSort(list: List<Int>, delayInMs: Long = 50): Flow<List<Int>> = flow{

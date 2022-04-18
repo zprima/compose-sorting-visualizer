@@ -7,33 +7,41 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sortingvisualizer.domain.algorithm.Algorithm
-import com.example.sortingvisualizer.domain.algorithm.bubbleSort
-import com.example.sortingvisualizer.domain.algorithm.quickSort
-import com.example.sortingvisualizer.domain.algorithm.randomize
+import com.example.sortingvisualizer.domain.algorithm.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class HomeViewModel: ViewModel() {
+class HomeViewModel : ViewModel() {
     var uiState by mutableStateOf(HomeUiState())
+    private var sortingJob: Job? = null
 
     init {
         reshuffle()
     }
 
-    fun reshuffle(){
+    fun reshuffle() {
         uiState = uiState.copy(
             numbers = randomize(uiState.numbers)
         )
     }
 
-     fun sort(algorithm: Algorithm){
+    fun stopSort() {
+        sortingJob?.cancel()
+        uiState = uiState.copy(sortRunning = false)
+    }
+
+    fun sort(algorithm: Algorithm) {
+        if(uiState.sortRunning){
+            sortingJob?.cancel()
+        }
+
         when (algorithm) {
             Algorithm.BUBBLE_SORT -> {
-                viewModelScope.launch {
+                sortingJob = viewModelScope.launch {
                     uiState = uiState.copy(sortRunning = true)
 
-                    bubbleSort(uiState.numbers).collectLatest { newList ->
+                     bubbleSort(uiState.numbers).collectLatest { newList ->
                         uiState = uiState.copy(numbers = listOf())
                         uiState = uiState.copy(numbers = newList)
                     }
@@ -42,10 +50,24 @@ class HomeViewModel: ViewModel() {
                 }
             }
             Algorithm.QUICK_SORT -> {
-                viewModelScope.launch {
+                sortingJob = viewModelScope.launch {
                     uiState = uiState.copy(sortRunning = true)
 
                     quickSort(
+                        list = uiState.numbers.toMutableList()
+                    ).collectLatest { newList ->
+                        uiState = uiState.copy(numbers = listOf())
+                        uiState = uiState.copy(numbers = newList)
+                    }
+
+                    uiState = uiState.copy(sortRunning = false)
+                }
+            }
+            Algorithm.MERGE_SORT -> {
+                sortingJob = viewModelScope.launch {
+                    uiState = uiState.copy(sortRunning = true)
+
+                    mergeSort(
                         list = uiState.numbers.toMutableList()
                     ).collectLatest { newList ->
                         uiState = uiState.copy(numbers = listOf())
