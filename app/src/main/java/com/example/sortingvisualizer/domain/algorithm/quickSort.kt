@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
-suspend fun quickSort(list: List<Int>, delayInMs: Long = 50): Flow<List<Int>> = flow{
+suspend fun quickSort(list: List<Int>, delayInMs: Long = 10): Flow<List<Int>> = flow{
     if(list.size < 2){
         emit(list)
         return@flow

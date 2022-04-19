@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
-suspend fun mergeSort(list: List<Int>, delayInMs:Long = 50): Flow<List<Int>> = flow {
+suspend fun mergeSort(list: List<Int>, delayInMs:Long = 10): Flow<List<Int>> = flow {
     val newList = list.toMutableList()
 
     if(newList.size <= 1) {

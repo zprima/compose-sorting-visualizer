@@ -21,6 +21,9 @@ class HomeViewModel : ViewModel() {
     }
 
     fun reshuffle() {
+        if(sortingJob?.isActive == true){
+            return
+        }
         uiState = uiState.copy(
             numbers = randomize(uiState.numbers)
         )
@@ -68,6 +71,20 @@ class HomeViewModel : ViewModel() {
                     uiState = uiState.copy(sortRunning = true)
 
                     mergeSort(
+                        list = uiState.numbers.toMutableList()
+                    ).collectLatest { newList ->
+                        uiState = uiState.copy(numbers = listOf())
+                        uiState = uiState.copy(numbers = newList)
+                    }
+
+                    uiState = uiState.copy(sortRunning = false)
+                }
+            }
+            Algorithm.INSERTION_SORT -> {
+                sortingJob = viewModelScope.launch {
+                    uiState = uiState.copy(sortRunning = true)
+
+                    insertionSort(
                         list = uiState.numbers.toMutableList()
                     ).collectLatest { newList ->
                         uiState = uiState.copy(numbers = listOf())

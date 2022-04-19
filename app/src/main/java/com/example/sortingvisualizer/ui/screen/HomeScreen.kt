@@ -47,6 +47,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()){
             Button(onClick = { viewModel.sort(Algorithm.BUBBLE_SORT) }) {  Text("Bubble Sort") }
             Button(onClick = { viewModel.sort(Algorithm.QUICK_SORT) }) {  Text("Quick Sort") }
             Button(onClick = { viewModel.sort(Algorithm.MERGE_SORT) }) {  Text("Merge Sort") }
+            Button(onClick = { viewModel.sort(Algorithm.INSERTION_SORT) }) {  Text("Insertion Sort") }
         }
 
         Spacer(Modifier.height(16.dp))
@@ -60,39 +61,28 @@ fun NumberVisualizer(numbers: List<Int>) {
     Canvas(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxHeight(0.7f)
+            .fillMaxHeight()
             .fillMaxWidth()
-            .border(1.dp, Color.Blue)
+//            .border(1.dp, Color.Blue)
 
     ){
         val width = size.width
         val height = size.height
 
-        val strokeWidth = Math.floor((width.toDouble() / numbers.size)).toFloat()
+        val strokeWidth = Math.ceil((width.toDouble() / numbers.size)).toFloat()
 
         var start = 0f
         var end = 0f
-
-        val paint = Paint()
-        paint.color = Color.White.hashCode()
-        paint.textSize = 32f
 
         numbers.forEachIndexed { index, number ->
             start = index * strokeWidth + (strokeWidth / 2)
             end = height - ((height / numbers.size) * number)
 
             drawLine(
-                color = if(index%2==0) Color.Black else Color.Red,
+                color = Color.Red,
                 strokeWidth = strokeWidth,
                 start = Offset(x=start, y=height),
                 end = Offset(x=start, y=end)
-            )
-
-            drawContext.canvas.nativeCanvas.drawText(
-                number.toString(),
-                start,
-                height,
-                paint
             )
         }
     }
