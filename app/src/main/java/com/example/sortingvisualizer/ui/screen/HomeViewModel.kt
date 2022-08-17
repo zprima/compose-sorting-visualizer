@@ -39,6 +39,8 @@ class HomeViewModel : ViewModel() {
             sortingJob?.cancel()
         }
 
+        uiState = uiState.copy(selectedSortAlgorithm = algorithm)
+
         when (algorithm) {
             Algorithm.BUBBLE_SORT -> {
                 sortingJob = viewModelScope.launch {
