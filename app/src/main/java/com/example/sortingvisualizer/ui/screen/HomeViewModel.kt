@@ -34,14 +34,20 @@ class HomeViewModel : ViewModel() {
         uiState = uiState.copy(sortRunning = false)
     }
 
-    fun sort(algorithm: Algorithm) {
+    fun selectAlgorithm(algorithm: Algorithm){
+        uiState = uiState.copy(selectedSortAlgorithm = algorithm)
+    }
+
+    fun selectVisualizer(visualizer: Visualizer){
+        uiState = uiState.copy(visualizer = visualizer)
+    }
+
+    fun sort() {
         if(uiState.sortRunning){
             sortingJob?.cancel()
         }
 
-        uiState = uiState.copy(selectedSortAlgorithm = algorithm)
-
-        when (algorithm) {
+        when (uiState.selectedSortAlgorithm) {
             Algorithm.BUBBLE_SORT -> {
                 sortingJob = viewModelScope.launch {
                     uiState = uiState.copy(sortRunning = true)
